@@ -16,13 +16,14 @@ int main(){
         prompt_printer();
 
         nread = getline(&line, &len, stdin);
-        if (nread == -1) {
+        if(nread == -1){
 
-            if (feof(stdin)) {
+            if(feof(stdin)){
 
                 printf("\n");
                 break;
-            } else {
+            } 
+            else{
                 perror("getline");
                 break;
             }

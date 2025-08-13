@@ -16,11 +16,10 @@ void rm_emptyblocks(ParsedLine *parsedline){
         if(empty){
 
             if (i == parsedline->blockcount - 1 && i > 0 &&
-                parsedline->blocks[i-1].connector == CONN_BG) {
+                parsedline->blocks[i-1].connector == CONN_AND) {
                 // Remove the last block
                 parsedline->blockcount--;
                 // Mark previous block as background
-                parsedline->blocks[i-1].connector = CONN_NONE;
                 parsedline->background = 1;
             } 
             else{
@@ -50,7 +49,7 @@ int validate_input(ParsedLine *parsedline){
         const CommandBlock *block = &parsedline->blocks[i];
 
         if(i == parsedline->blockcount - 1){
-            if(block->connector == CONN_AND || block->connector == CONN_SEQ){
+            if(block->connector == CONN_ANDAND || block->connector == CONN_SEQ){
                 printf("Error: Line cannot end with connector ; or &&\n");
                 return 1;
             }

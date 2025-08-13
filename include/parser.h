@@ -5,8 +5,8 @@
 typedef enum {
     CONN_NONE,   // END OF CMD line
     CONN_SEQ,    // ;
-    CONN_AND,    // &&
-    CONN_BG      // &
+    CONN_ANDAND,    // &&
+    CONN_AND      // &
 } ConnectorType;
 
 typedef struct {

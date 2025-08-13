@@ -7,11 +7,11 @@
 typedef enum{
     CONN_NONE,
     CONN_SEQ,   // ;
-    CONN_AND,   // &&
-    CONN_BG     // &
+    CONN_ANDAND,   // &&
+    CONN_AND     // &
 } ConnectorType;
 
-typedef struct {
+typedef struct{
     char *argv[16];
     int argcount;
     char *input;	// < file
@@ -19,26 +19,38 @@ typedef struct {
     int append;		// 1 for >>
 } Atomic;
 
-typedef struct {
+typedef struct{
     Atomic atomics[16];
     int atomic_count;
     ConnectorType connector; // connector to next block
 } CommandBlock;
 
-typedef struct {
+typedef struct{
     CommandBlock blocks[16];
     int blockcount;
     int background;
 } ParsedLine;
 
-
+const char* connection_type(ConnectorType type, const ParsedLine* parsedline ){
+    switch(type){
+        case 0:  return "NONE";
+        case 1:  return "SEQUENTIAL";
+        case 2:  return "&&";
+        case 3:
+			if(parsedline->background==1)
+        		return "& [BACKGROUND]";
+        	else
+        		return "& [CONNECTOR]";
+        default: return "UNKNOWN";
+    }
+}
 void print_parsed(const ParsedLine *pl){
 
     printf("Parsed %d blocks\n", pl->blockcount);
     
     for(int i = 0; i < pl->blockcount; i++){
     
-        printf(" Block %d: connector = %d\n", i, pl->blocks[i].connector);
+        printf(" Block %d: connector = %s\n", i, connection_type(pl->blocks[i].connector, pl));
 
         for(int j = 0; j < pl->blocks[i].atomic_count; j++){
         
@@ -89,21 +101,23 @@ static char *read_token(const char **p){
     return strndup(start, *p - start);
 }
 
-char* filename_check(char *s) {
+bool filename_check(char *s){
+
     if(!s || !*s){
-    	return "";
+    	return false;
     }
     while(*s){
         if (*s == '|' || *s == '&' || *s == '>' || *s == '<' || *s == ';')
-            return "";
+            return false;
         s++;
     }
-    return s;
+    return true;
 }
 
 ParsedLine parse_line(const char *line){
 
     ParsedLine pl = {0};
+    pl.background = 0;
     pl.blockcount = 1;
     CommandBlock *block = &pl.blocks[0];
     block->atomic_count = 1;
@@ -121,7 +135,7 @@ ParsedLine parse_line(const char *line){
             block->atomic_count++;
         }
         else if(strcmp(token, "&&") == 0){
-            block->connector = CONN_AND;
+            block->connector = CONN_ANDAND;
             block = &pl.blocks[pl.blockcount];
             pl.blockcount++;
             block->atomic_count = 1;
@@ -135,7 +149,7 @@ ParsedLine parse_line(const char *line){
             atomic = &block->atomics[0];
         }
         else if (strcmp(token, "&") == 0){
-            block->connector = CONN_BG;
+            block->connector = CONN_AND;
             block = &pl.blocks[pl.blockcount];
             pl.blockcount++;
             block->atomic_count = 1;
@@ -143,12 +157,16 @@ ParsedLine parse_line(const char *line){
         }
 		else if(strcmp(token, "<") == 0){
 		    char *file = read_token(&p);
-		    file = filename_check(file);
+		    if(!filename_check(file)){
+		    	file = "";
+		    }
 		    atomic->input = file;
 		}
 		else if(strcmp(token, ">") == 0 || strcmp(token, ">>") == 0){
 		    char *file = read_token(&p);
-		    file = filename_check(file);
+		    if(!filename_check(file)){
+		    	file = "";
+		    }
 		    atomic->output = file;
 		    atomic->append = (token[1] == '>');
 		}
