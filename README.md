@@ -18,7 +18,7 @@ The parser supports basic shell features like input/output redirection (<, >, >>
 
 ## Input Validation `validate.c`
 
-- Detects syntax errors such as missing filenames after redirection operators or empty commands after pipes.
+- Detects syntax errors such as missing or invalid filenames after redirection operators or empty commands after pipes.
 - Throws an error for end of line ; and && characters. 
 
 ### Authors
@@ -50,8 +50,3 @@ Run the custom C Shell
 ```bash
   ./shell.out
 ```
-
-
-![Logo](https://www.iiit.ac.in/wp-content/uploads/2022/06/IIIT_Hyderabad_Logo-e1655116937986.jpg)
-
-- This Repo was created for the CS3301_OSN course under Prof. [@Karthik Vaidhyanathan](https://github.com/karthikv1392)
