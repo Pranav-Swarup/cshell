@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include "prompt.h"
 #include "parser.h"
+#include "validate.h"
 
 int main(){
     get_prompt_info();
@@ -37,6 +38,9 @@ int main(){
         }
 
 		ParsedLine parsed = parse_line(line);
+		if(validate_input(&parsed)==1){
+			continue;
+		}
 		print_parsed(&parsed);
     }
 

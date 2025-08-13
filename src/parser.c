@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 typedef enum{
     CONN_NONE,
@@ -88,6 +89,18 @@ static char *read_token(const char **p){
     return strndup(start, *p - start);
 }
 
+char* filename_check(char *s) {
+    if(!s || !*s){
+    	return "";
+    }
+    while(*s){
+        if (*s == '|' || *s == '&' || *s == '>' || *s == '<' || *s == ';')
+            return "";
+        s++;
+    }
+    return s;
+}
+
 ParsedLine parse_line(const char *line){
 
     ParsedLine pl = {0};
@@ -102,12 +115,12 @@ ParsedLine parse_line(const char *line){
     while((token = read_token(&p)) != NULL){
 
 		// I'm hndling piping and other connectionshere
-        if (strcmp(token, "|") == 0){
+        if(strcmp(token, "|") == 0){
             // starting a new atomic in same block
             atomic = &block->atomics[block->atomic_count];
             block->atomic_count++;
         }
-        else if (strcmp(token, "&&") == 0) {
+        else if(strcmp(token, "&&") == 0){
             block->connector = CONN_AND;
             block = &pl.blocks[pl.blockcount];
             pl.blockcount++;
@@ -128,16 +141,18 @@ ParsedLine parse_line(const char *line){
             block->atomic_count = 1;
             atomic = &block->atomics[0];
         }
-        else if(strcmp(token, "<") == 0){
-            char *file = read_token(&p);
-            atomic->input = file;
-        }
-        else if(strcmp(token, ">") == 0 || strcmp(token, ">>") == 0){
-            char *file = read_token(&p);
-            atomic->output = file;
-            atomic->append = (token[1] == '>');
-        }
-        else {
+		else if(strcmp(token, "<") == 0){
+		    char *file = read_token(&p);
+		    file = filename_check(file);
+		    atomic->input = file;
+		}
+		else if(strcmp(token, ">") == 0 || strcmp(token, ">>") == 0){
+		    char *file = read_token(&p);
+		    file = filename_check(file);
+		    atomic->output = file;
+		    atomic->append = (token[1] == '>');
+		}
+        else{
             atomic->argv[atomic->argcount++] = token;
             token = NULL; // prevent free
         }
