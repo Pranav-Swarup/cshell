@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "prompt.h"
-#include "parser.h"
+#include "parser2.h"
+#include "input_split.h"
 
 int main(){
     get_prompt_info();
@@ -36,11 +37,8 @@ int main(){
             continue;
         }
 
-        Node *root = parse(line);
-        if(root){
-            print_node(root, 0);
-            free_node(root);
-        }
+		ParsedLine parsed = parse_line(line);
+		print_parsed(&parsed);
     }
 
     free(line);
