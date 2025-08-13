@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "prompt.h"
-#include "parser2.h"
-#include "input_split.h"
+#include "parser.h"
 
 int main(){
     get_prompt_info();

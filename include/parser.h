@@ -1,55 +1,36 @@
 #ifndef PARSER_H
 #define PARSER_H
-
-typedef enum{
-    TOK_NAME,       // cmd or arg
-    TOK_PIPE,       // |
-    TOK_BG,         // &
-    TOK_AND,        // &&
-    TOK_RED_IN,     // <
-    TOK_RED_OUT,    // >
-    TOK_RED_APPEND, // >>
-    TOK_SEMICOLON,  // ;
-    TOK_EOF         // End of input
-} TokenType;
+#include <stddef.h>
 
 typedef enum {
-    NODE_SHELL_CMD,
-    NODE_CMD_GROUP,
-    NODE_ATOMIC,
-    NODE_SEQUENTIAL
-} NodeType;
+    CONN_NONE,   // END OF CMD line
+    CONN_SEQ,    // ;
+    CONN_AND,    // &&
+    CONN_BG      // &
+} ConnectorType;
 
-typedef struct Node {
-    NodeType type;
-    union {
-        struct {
-            struct Node *cmd_group;
-            char *connector;
-            struct Node *next;
-            int background;
-        } shell_cmd;
-        struct {
-            struct Node *atomic;
-            struct Node *next;
-        } cmd_group;
-        struct {
-            char *command;
-            char **args;
-            int arg_count;
-            char *input;
-            char *output;
-            int append;
-        } atomic;
-        struct {
-            struct Node *first;
-            struct Node *second;
-        } sequential;
-    } data;
-} Node;
+typedef struct {
+    char *argv[16];
+    int argcount;
+    char *input;          // < file
+    char *output;         // > file
+    int append;           // 1 if >>, 0 if >
+} Atomic;
 
-Node *parse(char *input);
-void free_node(Node *node);
-void print_node(Node *node, int indent);
+typedef struct {
+    Atomic atomics[16];
+    int atomic_count;
+    ConnectorType connector;
+} CommandBlock;
+
+typedef struct {
+    CommandBlock blocks[16];
+    int blockcount;
+    int background; // 1 if final background '&' is set
+} ParsedLine;
+
+ParsedLine parse_line(const char *line);
+
+void print_parsed(const ParsedLine *pl);
 
 #endif
