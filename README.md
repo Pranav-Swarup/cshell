@@ -4,7 +4,7 @@
 This project implements a simple C-based  custom shell. 
 
 
-## Input Parsing `prompt.c parser.c`
+## Input Parsing `prompt.c | parser.c`
 
 - Reads a raw input string, tokenizes it into a hierarchical struct order.
 
@@ -18,8 +18,15 @@ The parser supports basic shell features like input/output redirection (<, >, >>
 
 ## Input Validation `validate.c`
 
-- Detects syntax errors such as missing or invalid filenames after redirection operators or empty commands after pipes.
-- Throws an error for end of line ; and && characters. 
+- Detects syntax errors such as missing filenames after redirection operators or empty commands after pipes.
+- Throws an error for end of line ; and && characters.
+- Checks for unclosed quotations and invalid characters inside the quotes.
+
+## Command Execution Manager `cmdrunner.c`
+
+- Detects the command and arguments chain in a particular atomic. Checks if it is piped to a next command.
+- Calls necessary functions to run the command.
+- Based on function return values, it handles piping and `&&` logic. 
 
 ### Authors
 
@@ -50,3 +57,22 @@ Run the custom C Shell
 ```bash
   ./shell.out
 ```
+
+
+## Changelog and Updates
+
+### 14/08/25
+
+- Added quotation handling logic.
+- Invalidate unclosed quotes and invalid chars inside quotes.
+- Added cmdrunner.c and .h 
+- Migrated print function to `cmdrunner.c`.
+
+
+### 13/08/25
+
+- Redefined storage structure to a more useful hierarchical format. (Check `parser.c`)
+- Added validate.c to check for invalid atomics and tokens.
+- Defined & connector as a marker for background process. 
+- Created README
+
