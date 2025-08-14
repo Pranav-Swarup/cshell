@@ -31,7 +31,7 @@ typedef struct{
     int background;
 } ParsedLine;
 
-const char* connection_type(ConnectorType type, const ParsedLine* parsedline ){
+const char* connection_type(ConnectorType type, const ParsedLine* parsedline){
     switch(type){
         case 0:  return "NONE";
         case 1:  return "SEQUENTIAL";
@@ -80,17 +80,17 @@ static char *read_token(const char **p){
 
     const char *start = *p;
     
-    if (start[0] == '>' && start[1] == '>') {
+    if(start[0] == '>' && start[1] == '>'){
         *p += 2;
         return strdup(">>");
     }
     
-    if (start[0] == '&' && start[1] == '&') {
+    if(start[0] == '&' && start[1] == '&'){
         *p += 2;
         return strdup("&&");
     }
 
-    if (strchr("|&;<>", start[0])) {
+    if(strchr("|&;<>", start[0])){
         (*p)++;
         return strndup(start, 1);
     }
@@ -99,12 +99,13 @@ static char *read_token(const char **p){
     size_t i = 0;
 
     if(**p == '"' || **p == '\''){
-        char quote = *(*p)++; // skip the quote
+        char quote = **p;
+        buf[i++] = *(*p)++; // dont skip the quote
         while(**p && **p != quote){
             buf[i++] = *(*p)++;
         }
         if(**p == quote)
-        	(*p)++; // skip closing quote
+        	buf[i++] = *(*p)++;
     }
     else{
         while(**p && !isspace((unsigned char)**p) && !strchr("|&;<>", **p)){
@@ -156,14 +157,14 @@ ParsedLine parse_line(const char *line){
             block->atomic_count = 1;
             atomic = &block->atomics[0];
         }
-        else if (strcmp(token, ";") == 0) {
+        else if(strcmp(token, ";") == 0) {
             block->connector = CONN_SEQ;
             block = &pl.blocks[pl.blockcount];
             pl.blockcount++;
             block->atomic_count = 1;
             atomic = &block->atomics[0];
         }
-        else if (strcmp(token, "&") == 0){
+        else if(strcmp(token, "&") == 0){
             block->connector = CONN_AND;
             block = &pl.blocks[pl.blockcount];
             pl.blockcount++;

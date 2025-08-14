@@ -43,8 +43,8 @@ int main(){
 		if(validate_input(&parsed)==1){
 			continue;
 		}
-		print_parsed(&parsed);
-		//run_command(&parsed);
+		//print_parsed(&parsed);
+		print_cmd(&parsed);
     }
 
     free(line);
