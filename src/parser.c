@@ -58,13 +58,13 @@ void print_parsed(const ParsedLine *pl){
             printf("   Atomic %d: ", j);
 
             for(int k = 0; k < a->argcount; k++){
-                printf("%s ", a->argv[k]);
+                printf("%s | ", a->argv[k]);
             }
             
             if(a->input)
-            	printf("[input] %s ", a->input);
+            	printf("[input] %s | ", a->input);
             if(a->output)
-            	printf("%s %s ", a->append ? "[append >>]" : "[output >]", a->output);
+            	printf("%s %s | ", a->append ? "[append >>]" : "[output >]", a->output);
 
             printf("\n");
         }
@@ -72,14 +72,14 @@ void print_parsed(const ParsedLine *pl){
 }
 
 static char *read_token(const char **p){
-
+	
     while(**p && isspace((unsigned char)**p))
     	(*p)++;
 
     if (**p == '\0') return NULL;
 
     const char *start = *p;
-
+    
     if (start[0] == '>' && start[1] == '>') {
         *p += 2;
         return strdup(">>");
@@ -95,10 +95,25 @@ static char *read_token(const char **p){
         return strndup(start, 1);
     }
 
-    while(**p && !isspace((unsigned char)**p) && !strchr("|&;<>", **p)){
-        (*p)++;
+    char buf[1024];
+    size_t i = 0;
+
+    if(**p == '"' || **p == '\''){
+        char quote = *(*p)++; // skip the quote
+        while(**p && **p != quote){
+            buf[i++] = *(*p)++;
+        }
+        if(**p == quote)
+        	(*p)++; // skip closing quote
     }
-    return strndup(start, *p - start);
+    else{
+        while(**p && !isspace((unsigned char)**p) && !strchr("|&;<>", **p)){
+            buf[i++] = *(*p)++;
+        }
+    }
+
+    buf[i] = '\0';
+    return strdup(buf);
 }
 
 bool filename_check(char *s){

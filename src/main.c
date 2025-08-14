@@ -4,6 +4,7 @@
 #include "prompt.h"
 #include "parser.h"
 #include "validate.h"
+#include "cmdrunner.h"
 
 int main(){
     get_prompt_info();
@@ -24,7 +25,7 @@ int main(){
                 break;
             } 
             else{
-                perror("getline");
+                printf("Error in getline");
                 break;
             }
         }
@@ -43,6 +44,7 @@ int main(){
 			continue;
 		}
 		print_parsed(&parsed);
+		//run_command(&parsed);
     }
 
     free(line);
