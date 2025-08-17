@@ -21,16 +21,14 @@ typedef struct {
     Atomic atomics[16];
     int atomic_count;
     ConnectorType connector;
+    int background;		// Default set to 0. When background TRUE, parser.c sets to 1
 } CommandBlock;
 
 typedef struct {
     CommandBlock blocks[16];
     int blockcount;
-    int background; // 1 if final background '&' is set
 } ParsedLine;
 
 ParsedLine parse_line(const char *line);
-
-void print_parsed(const ParsedLine *pl);
 
 #endif

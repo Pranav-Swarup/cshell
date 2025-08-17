@@ -5,6 +5,7 @@
 #include "parser.h"
 #include "validate.h"
 #include "cmdrunner.h"
+#include "cmdarchive.h"
 
 int main(){
     get_prompt_info();
@@ -43,7 +44,6 @@ int main(){
 		if(validate_input(&parsed)==1){
 			continue;
 		}
-		//print_parsed(&parsed);
 		print_cmd(&parsed);
     }
 

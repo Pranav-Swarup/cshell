@@ -4,6 +4,8 @@
 
 int validate_input(ParsedLine *pl);
 char check_invalid_char(const char *str);
-int rm_emptyblocks(ParsedLine *pl);
+
+// Useless
+int rm_emptyblocks(ParsedLine *pl);	// Also marks final connection as NONE if &
 
 #endif

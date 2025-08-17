@@ -14,13 +14,11 @@ void rm_emptyblocks(ParsedLine *parsedline){
         }
 
         if(empty){
-
-            if (i == parsedline->blockcount - 1 && i > 0 &&
-                parsedline->blocks[i-1].connector == CONN_AND) {
-                // Remove the last block
+			if(i == parsedline->blockcount - 1 && i > 0 &&
+                parsedline->blocks[i-1].connector == CONN_AND){
                 parsedline->blockcount--;
-                // Mark previous block as background
-                parsedline->background = 1;
+                //parsedline->blocks[i-1].background = 1; Already being marked in parser.c
+                parsedline->blocks[i-1].connector = CONN_NONE;
             } 
             else{
                 for(int j = i; j < parsedline->blockcount - 1; j++){

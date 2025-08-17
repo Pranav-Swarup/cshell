@@ -1,6 +1,3 @@
-#define _POSIX_C_SOURCE 200809L
-#include "prompt.h"
-
 #include <pwd.h>
 #include <unistd.h>
 #include <limits.h>
@@ -8,6 +5,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
+
+#include "prompt.h"
+
+//############## LLM Generated Code Begins ##############
+
+#define _POSIX_C_SOURCE 200809L
+
+//############## LLM Generated Code Ends ##############
 
 static char *username = NULL;
 static char *hostname = NULL;

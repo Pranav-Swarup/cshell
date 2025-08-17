@@ -2,7 +2,10 @@
 #define CMDRUNNER_H
 #include "parser.h"
 
-const char* conn_type(ConnectorType type, const ParsedLine* parsedline);
 int print_cmd(ParsedLine* p);
+void dispatch_cmd(ParsedLine* p);
+
+// Useless
+const char* conn_type(ConnectorType type, const ParsedLine* parsedline);
 
 #endif

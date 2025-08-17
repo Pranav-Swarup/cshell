@@ -61,6 +61,15 @@ Run the custom C Shell
 
 ## Changelog and Updates
 
+### 17/08/25
+
+- Fixed background process marking.
+- Combined command sequence print handling into one function in `cmdrunner.c`
+- Fixed `validate.c` -> Final & block will be marked as CONN_NONE while being background.
+- Updated .h files for parser and cmdrunner
+- Only the LAST input and output redirected files are considered when multiple are chained.
+
+
 ### 14/08/25
 
 - Added quotation handling logic.
