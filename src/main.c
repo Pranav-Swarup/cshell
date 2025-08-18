@@ -44,7 +44,7 @@ int main(){
 		if(validate_input(&parsed)==1){
 			continue;
 		}
-		print_cmd(&parsed);
+		dispatch_cmd(&parsed);
     }
 
     free(line);

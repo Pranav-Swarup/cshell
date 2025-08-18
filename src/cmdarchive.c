@@ -17,9 +17,9 @@ const CommandInfo cmd_table[] = {
 const int cmd_table_size = sizeof(cmd_table) / sizeof(cmd_table[0]);
 
 
-const CommandInfo *get_cmd_info(const char *cmd_name) {
-    for (int i = 0; i < cmd_table_size; i++) {
-        if (strcmp(cmd_name, cmd_table[i].name) == 0) {
+const CommandInfo *get_cmd_info(const char *cmd_name){
+    for(int i = 0; i < cmd_table_size; i++){
+        if(strcmp(cmd_name, cmd_table[i].name) == 0){
             return &cmd_table[i];
         }
     }
