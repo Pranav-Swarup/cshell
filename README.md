@@ -61,7 +61,7 @@ Run the custom C Shell
 
 ## Flowchart
 
-![alt text](https://drive.google.com/file/d/1HN77OqmvWV1YPXZwaVE2N8W-bMZ__uNN/view?usp=sharing)
+![Flowchart](https://drive.google.com/uc?export=view&id=1HN77OqmvWV1YPXZwaVE2N8W-bMZ__uNN)
 
 
 ## Changelog and Updates
