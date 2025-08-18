@@ -59,7 +59,20 @@ Run the custom C Shell
 ```
 
 
+## Flowchart
+
+![alt text](https://drive.google.com/file/d/1HN77OqmvWV1YPXZwaVE2N8W-bMZ__uNN/view?usp=sharing)
+
+
 ## Changelog and Updates
+
+### 18/08/25
+
+- Upgraded `cmdrunner.c` to handle block execution (redirection).
+- bg and fg processes are redirected to helper functions `run_block()` and `run_block_atomic()`
+- util .c and .h files created for each of the commands. 
+- command logic defined in their respective .c files.
+- made the print function modular.
 
 ### 17/08/25
 
