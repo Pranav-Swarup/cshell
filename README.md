@@ -4,6 +4,11 @@
 This project implements a simple C-based  custom shell. 
 
 
+## Flowchart
+
+![Flowchart](https://drive.google.com/uc?export=view&id=1eQw-eO-wYOgVBsulXUYqVlMT7qjFkNko)
+
+
 ## Input Parsing `prompt.c | parser.c`
 
 - Reads a raw input string, tokenizes it into a hierarchical struct order.
@@ -25,8 +30,11 @@ The parser supports basic shell features like input/output redirection (<, >, >>
 ## Command Execution Manager `cmdrunner.c`
 
 - Detects the command and arguments chain in a particular atomic. Checks if it is piped to a next command.
-- Calls necessary functions to run the command.
-- Based on function return values, it handles piping and `&&` logic. 
+- Calls `run_block()` or `run_block_atomic()` to run the command in the foreground or the background.
+
+## _util files
+
+- each command is defined within their respective _util.c files.
 
 ### Authors
 
@@ -57,11 +65,6 @@ Run the custom C Shell
 ```bash
   ./shell.out
 ```
-
-
-## Flowchart
-
-![Flowchart](https://drive.google.com/uc?export=view&id=1eQw-eO-wYOgVBsulXUYqVlMT7qjFkNko)
 
 
 ## Changelog and Updates

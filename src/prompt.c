@@ -16,7 +16,7 @@
 
 static char *username = NULL;
 static char *hostname = NULL;
-static char *home = NULL;
+char *home = NULL;					// externed in prompt.h file
 
 void get_prompt_info(){
     struct passwd *pw = getpwuid(getuid());
@@ -44,7 +44,7 @@ char *display_path(void){
     char cwd[PATH_MAX];
 
     if(getcwd(cwd, sizeof(cwd)) == NULL){
-        strncpy(buf, "?", sizeof(buf));
+        strncpy(buf, "NULL", sizeof(buf));
         buf[sizeof(buf)-1] = '\0';
         return buf;
     }
@@ -52,7 +52,7 @@ char *display_path(void){
     int hlen = strlen(home);
     
     if(hlen > 1 && strncmp(cwd, home, hlen) == 0 && (cwd[hlen] == '/' || cwd[hlen] == '\0')){
-        if (cwd[hlen] == '\0') 
+        if(cwd[hlen] == '\0')
         	snprintf(buf, sizeof(buf), "~");
         else
         	snprintf(buf, sizeof(buf), "~%s", cwd + hlen);

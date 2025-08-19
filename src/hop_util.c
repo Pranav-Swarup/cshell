@@ -1,18 +1,71 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <limits.h>
 #include "hop_util.h"
+#include "prompt.h"
 
-int cmd_hop(const Atomic *atomic) {
-    printf("[hop] called with %d arguments:\n", atomic->argcount);
+static char prev_dir[PATH_MAX] = {0};
 
-    for (int i = 0; i < atomic->argcount; i++) {
-        printf("  argv[%d] = %s\n", i, atomic->argv[i]);
+int cmd_hop(const Atomic *atomic){
+    char cwd[PATH_MAX];
+
+    if(getcwd(cwd, sizeof(cwd)) == NULL){
+        perror("error in getcwd");
+        return -1;
     }
 
     if(atomic->argcount == 1){
-        printf("[hop] No argument -> would go to HOME dir\n");
+        if(chdir(home) != 0){
+            perror("hop to home error");
+            return -1;
+        }
+        strncpy(prev_dir, cwd, sizeof(prev_dir));
+        return 0;
     }
-    else{
-        printf("[hop] Would chdir to: %s\n", atomic->argv[1]);
+
+    for(int i = 1; i < atomic->argcount; i++){
+        const char *arg = atomic->argv[i];
+
+        if(strcmp(arg, "~") == 0){
+            if(chdir(home) != 0){
+                perror("hop to home error");
+                return -1;
+            }
+            strncpy(prev_dir, cwd, sizeof(prev_dir));
+        }
+        else if(strcmp(arg, ".") == 0){
+            continue;
+        }
+        else if(strcmp(arg, "..") == 0){
+            if(chdir("..") != 0){
+                perror("hop to parent dir");
+                return -1;
+            }
+            strncpy(prev_dir, cwd, sizeof(prev_dir));
+        }
+        else if(strcmp(arg, "-") == 0){
+            if(strlen(prev_dir) == 0)
+            	continue;
+            if(chdir(prev_dir) != 0){
+                perror("hop");
+                return -1;
+            }
+            strncpy(prev_dir, cwd, sizeof(prev_dir));
+        }
+        else{
+            if(chdir(arg) != 0){
+                perror("hop to custom path error");
+                return -1;
+            }
+            strncpy(prev_dir, cwd, sizeof(prev_dir));
+        }
+
+        if(getcwd(cwd, sizeof(cwd)) == NULL){
+            perror("getcwd");
+            return -1;
+        }
     }
 
     return 0;
