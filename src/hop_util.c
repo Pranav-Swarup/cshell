@@ -49,21 +49,21 @@ int cmd_hop(const Atomic *atomic){
             if(strlen(prev_dir) == 0)
             	continue;
             if(chdir(prev_dir) != 0){
-                perror("hop");
+                printf("No such directory! - prev dir\n");
                 return -1;
             }
             strncpy(prev_dir, cwd, sizeof(prev_dir));
         }
         else{
             if(chdir(arg) != 0){
-                perror("hop to custom path error");
+                printf("No such directory!\n");
                 return -1;
             }
             strncpy(prev_dir, cwd, sizeof(prev_dir));
         }
 
         if(getcwd(cwd, sizeof(cwd)) == NULL){
-            perror("getcwd");
+            perror("error in getcwd");
             return -1;
         }
     }

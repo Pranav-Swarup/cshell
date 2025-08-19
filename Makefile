@@ -4,6 +4,7 @@ CFLAGS = -std=c99 -D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=700 \
 
 SRCS = src/main.c src/prompt.c src/parser.c src/validate.c src/cmdrunner.c \
 		src/cmdarchive.c \
+		src/redir.c \
 		src/hop_util.c \
 		src/reveal_util.c \
 		src/log_util.c \

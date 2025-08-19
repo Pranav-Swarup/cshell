@@ -2,6 +2,8 @@
 #include <string.h>
 #include "parser.h"
 #include "cmdarchive.h"
+#include "redir.h"
+// ------------------
 #include "hop_util.h"
 #include "reveal_util.h"
 #include "log_util.h"
@@ -80,7 +82,7 @@ int run_block(CommandBlock *block){
 	print_helper(block);
 	printf("----------------------------------PRINTER DONE\n");
 	for(int a = 0; a < block->atomic_count; a++){
-	    const Atomic *atomic = &block->atomics[a];
+	    Atomic *atomic = &block->atomics[a];
 
 			if(a!=0)
 	        	printf("---- PIPING ----\n");		
@@ -91,13 +93,19 @@ int run_block(CommandBlock *block){
 			continue;
 		}
 		if(strcmp(cmd->name,"hop")==0){
-			cmd_hop(atomic);
+			if(apply_redirection(atomic) == 0){
+			    cmd_hop(atomic);
+			}
 		}
 		else if(strcmp(cmd->name,"reveal")==0){
-			cmd_reveal(atomic);
+			if(apply_redirection(atomic) == 0){
+			    cmd_reveal(atomic);
+			}
 		}
 		else if(strcmp(cmd->name,"log")==0){
-			cmd_log(atomic);
+			if(apply_redirection(atomic) == 0){
+			    cmd_log(atomic);
+			}
 		}
 		else if(strcmp(cmd->name,"activities")==0){
 			cmd_activities(atomic);
@@ -111,6 +119,7 @@ int run_block(CommandBlock *block){
 		else if(strcmp(cmd->name,"bg")==0){
 			cmd_bg(atomic);
 		}
+		restore_redirection();
 	}
     return 0;
 }
@@ -121,7 +130,7 @@ int run_block_bg(CommandBlock *block){
    	print_helper(block);
    	printf("----------------------------------PRINTER DONE\n\n");
    	for(int a = 0; a < block->atomic_count; a++){
-   	    const Atomic *atomic = &block->atomics[a];
+   	    Atomic *atomic = &block->atomics[a];
    
    			if(a!=0)
    	        	printf("---- PIPING ----\n");		
@@ -192,6 +201,8 @@ int dispatch_cmd(ParsedLine *parsedline){
 		    run_block(block);
 		    last_status = 0;
 		}
+		
+		restore_redirection();
 	}
     return last_status;
 }
