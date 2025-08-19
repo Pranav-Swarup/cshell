@@ -139,13 +139,17 @@ ParsedLine parse_line(const char *line){
             
         }
 		else if(strcmp(token, "<") == 0){
+			int ipflag = 1;
 		    char *file = read_token(&p);
 		    if(!filename_check(file)){
 		    	file = "";
+		    	ipflag = 0;
 		    }
 		    atomic->input = file;
 
-		    if(strlen(file) > 0){
+		// ############## LLM Generated Code Begins ##############
+
+		    if(ipflag && strlen(file) > 0){
 		        FILE *fp = fopen(file, "r");
 		        if(!fp){
 		            printf("No such file or directory\n");
@@ -163,6 +167,9 @@ ParsedLine parse_line(const char *line){
 		            fclose(fp);
 		        }
 		    }
+
+		// ############## LLM Generated Code Ends ##############
+
 		}
 		else if(strcmp(token, ">") == 0 || strcmp(token, ">>") == 0){
 		    char *file = read_token(&p);

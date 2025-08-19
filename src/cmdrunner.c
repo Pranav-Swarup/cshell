@@ -78,9 +78,9 @@ int print_cmd(ParsedLine *parsedline){
 
 int run_block(CommandBlock *block){
 
-	printf("[EXEC] Running block with %d pipes...\n", block->atomic_count-1);
+	//printf("[EXEC] Running block with %d pipes...\n", block->atomic_count-1);
 	print_helper(block);
-	printf("----------------------------------PRINTER DONE\n");
+	//printf("----------------------------------PRINTER DONE\n");
 	for(int a = 0; a < block->atomic_count; a++){
 	    Atomic *atomic = &block->atomics[a];
 
@@ -126,9 +126,9 @@ int run_block(CommandBlock *block){
 
 int run_block_bg(CommandBlock *block){
 
-   	printf("[EXEC BG] Running block with %d pipes in the background...\n", block->atomic_count-1);
+   	//printf("[EXEC BG] Running block with %d pipes in the background...\n", block->atomic_count-1);
    	print_helper(block);
-   	printf("----------------------------------PRINTER DONE\n\n");
+   	//printf("----------------------------------PRINTER DONE\n\n");
    	for(int a = 0; a < block->atomic_count; a++){
    	    Atomic *atomic = &block->atomics[a];
    
@@ -172,11 +172,12 @@ int dispatch_cmd(ParsedLine *parsedline){
     for(int b = 0; b < parsedline->blockcount; b++){
     
         CommandBlock *block = &parsedline->blocks[b];
-        
+
         printf("==== BLOCK %d ====\n", b);
+		/*
         printf("Block Connector: %s\n", conn_type(block->connector));
 		printf("Background: %d\n", block->background);
-
+		*/
 		if(block->connector == CONN_AND || block->background == 1){
 		    last_status = 0;
 		    run_block_bg(block);

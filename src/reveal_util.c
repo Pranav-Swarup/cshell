@@ -54,8 +54,13 @@ int cmd_reveal(const Atomic *atomic) {
     size_t count = 0;
 
     while((entry = readdir(dir)) != NULL){
+
+		if(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+		    continue;
+
         if(!showall && entry->d_name[0] == '.')
         	continue;
+        
         names = realloc(names, (count + 1) * sizeof(char *));
         names[count] = strdup(entry->d_name);
         count++;
