@@ -117,9 +117,43 @@ int run_block(CommandBlock *block){
 
 int run_block_bg(CommandBlock *block){
 
-	printf("[EXEC BACKGROUND] Running block with %d pipes...\n", block->atomic_count-1);
-	print_helper(block);
-    return 0;
+   	printf("[EXEC BG] Running block with %d pipes in the background...\n", block->atomic_count-1);
+   	print_helper(block);
+   	printf("----------------------------------PRINTER DONE\n\n");
+   	for(int a = 0; a < block->atomic_count; a++){
+   	    const Atomic *atomic = &block->atomics[a];
+   
+   			if(a!=0)
+   	        	printf("---- PIPING ----\n");		
+   	    
+   	   	const CommandInfo* cmd = get_cmd_info(atomic->argv[0]);
+   		if(cmd==NULL){
+   			printf("Invalid command: %s\n", atomic->argv[0]);
+   			continue;
+   		}
+   		if(strcmp(cmd->name,"hop")==0){
+   			cmd_hop(atomic);
+   		}
+   		else if(strcmp(cmd->name,"reveal")==0){
+   			cmd_reveal(atomic);
+   		}
+   		else if(strcmp(cmd->name,"log")==0){
+   			cmd_log(atomic);
+   		}
+   		else if(strcmp(cmd->name,"activities")==0){
+   			cmd_activities(atomic);
+   		}
+   		else if(strcmp(cmd->name,"ping")==0){
+   			cmd_ping(atomic);
+   		}
+   		else if(strcmp(cmd->name,"fg")==0){
+   			cmd_fg(atomic);
+   		}
+   		else if(strcmp(cmd->name,"bg")==0){
+   			cmd_bg(atomic);
+   		}
+   	}
+       return 0;
 }
 
 
